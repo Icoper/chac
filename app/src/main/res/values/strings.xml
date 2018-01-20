@@ -6,10 +6,19 @@
     //Statistic Fragment
     <string name="start_chac">Start service</string>
     <string name="statistic_title">Statistic</string>
+    <string name="select_device">Select device</string>
+    <string name="select_time_period">Select statistic period</string>
+        <string name="time_period_start">From :</string>
+        <string name="time_period_end">To :</string>
+        <string name="time_period_all">All time</string>
+        <string name="time_period_today">Today</string>
+    <string name="list_app_text">Used apps statistic</string>
 
     //AboutAppFragment
     <string name="about_title">About</string>
 
     // AddDeviceFragment
     <string name="addDevice_title">Device\'s</string>
+    <string name="action_ok">OK</string>
+    <string name="action_cancel">Cancel</string>
 </resources>

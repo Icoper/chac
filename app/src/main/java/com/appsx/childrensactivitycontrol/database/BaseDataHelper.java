@@ -16,6 +16,7 @@ public class BaseDataHelper extends SQLiteOpenHelper {
         public static final String EVENT_NAME = "app_name";
         public static final String EVENT_TIME_START = "time_start";
         public static final String EVENT_TIME_END = "time_end";
+        public static final String EVENT_PACKAGE = "app_package";
 
     }
 
@@ -37,6 +38,7 @@ public class BaseDataHelper extends SQLiteOpenHelper {
             Event.TABLE_NAME + " ( " +
             Event._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
             Event.EVENT_NAME + " TEXT, " +
+            Event.EVENT_PACKAGE + " TEXT, " +
             Event.EVENT_TIME_START + " TEXT, " +
             Event.EVENT_TIME_END + " TEXT );";
 

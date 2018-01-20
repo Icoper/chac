@@ -1,36 +1,206 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout android:orientation="horizontal"
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:tools="http://schemas.android.com/tools">
+    android:background="@color/colorBorderGrey"
+    android:orientation="horizontal">
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-        <LinearLayout
-            android:padding="16dp"
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-            <TextView
-                android:textSize="18sp"
-                android:textStyle="bold"
-                android:gravity="start"
-                android:layout_gravity="center_horizontal"
-                android:text="@string/start_chac"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent" />
 
-            <Switch
-                android:layout_gravity="end"
-                android:id="@+id/sf_start_chac_switch"
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:padding="2dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="2dp"
+                android:background="@drawable/item_container"
+                android:elevation="4dp"
+                android:orientation="horizontal"
+                android:padding="8dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center_horizontal"
+                    android:gravity="start"
+                    android:text="@string/start_chac"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+                <Switch
+                    tools:checked="true"
+                    android:id="@+id/sf_start_chac_switch"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end"
+                    android:thumbTint="@color/colorBlue"
+                    tools:ignore="NewApi" />
+            </LinearLayout>
+
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                tools:ignore="NewApi" />
+                android:layout_margin="2dp"
+                android:background="@drawable/item_container"
+                android:elevation="4dp"
+                android:orientation="vertical"
+                android:padding="8dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/select_device"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+                <ExpandableListView
+                    android:id="@+id/sf_device_select"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                </ExpandableListView>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/sf_time_period"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                tools:layout_height="wrap_content"
+                android:layout_margin="2dp"
+                android:background="@drawable/item_container"
+                android:elevation="4dp"
+                android:orientation="vertical"
+                android:padding="8dp">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <LinearLayout
+                        android:layout_weight="1"
+                        android:orientation="vertical"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/select_time_period"
+                            android:textSize="16sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/sf_time_period_text"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@string/time_period_today"/>
+                    </LinearLayout>
+                    <ImageView
+                        android:paddingEnd="8dp"
+                        android:id="@+id/sf_time_period_more"
+                        android:layout_gravity="center"
+                        android:layout_weight="0"
+                        android:background="@drawable/ic_expand_more_black_48dp"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:background="@drawable/item_container"
+                    android:layout_margin="2dp"
+                    android:padding="4dp"
+                    android:id="@+id/ad_time_p_from"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_gravity="center"
+                        android:layout_weight="1"
+                        android:text="@string/time_period_start"
+                        android:id="@+id/ad_time_p_from_tv"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+
+                    <ImageView
+                        android:background="@drawable/ic_date_range_black_48dp"
+                        android:layout_width="32dp"
+                        android:layout_height="32dp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:background="@drawable/item_container"
+                    android:layout_margin="2dp"
+                    android:padding="4dp"
+                    android:id="@+id/ad_time_p_to"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_gravity="center"
+                        android:layout_weight="1"
+                        android:text="@string/time_period_end"
+                        android:id="@+id/ad_time_p_to_tv"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+
+                    <ImageView
+                        android:background="@drawable/ic_date_range_black_48dp"
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"></ImageView>
+                </LinearLayout>
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="2dp"
+                android:background="@drawable/item_container"
+                android:elevation="4dp"
+                android:orientation="vertical"
+                android:padding="8dp"
+                android:paddingBottom="64dp">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/list_app_text"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+
+                    <ProgressBar
+                        android:id="@+id/sf_loadapss_progress"
+                        android:layout_width="22dp"
+                        android:layout_height="22dp"
+                        android:indeterminateTint="@color/colorBlue"
+                        android:layout_alignParentEnd="true"
+                        android:layout_alignParentRight="true"
+                        android:layout_alignParentTop="true"
+                        android:layout_gravity="end" />
+                </RelativeLayout>
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/apps_list"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"></android.support.v7.widget.RecyclerView>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="54dp">
+
+            </LinearLayout>
         </LinearLayout>
-
-
     </ScrollView>
-
 </LinearLayout>

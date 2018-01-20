@@ -1,11 +1,14 @@
 package com.appsx.childrensactivitycontrol.database;
 
+import android.app.backup.BackupHelper;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
+import com.appsx.childrensactivitycontrol.model.AppListModel;
 import com.appsx.childrensactivitycontrol.model.EventModel;
 
 import java.util.ArrayList;
@@ -14,10 +17,12 @@ public class BaseDataMaster {
     private static final String LOG_TAG = "BaseDataMaster";
     private SQLiteDatabase database;
     private BaseDataHelper dbCreator;
+    private Context context;
 
     private static BaseDataMaster dataMaster;
 
     private BaseDataMaster(Context context) {
+        this.context = context;
         dbCreator = new BaseDataHelper(context);
         if (database == null || !database.isOpen()) {
             database = dbCreator.getWritableDatabase();
@@ -34,10 +39,20 @@ public class BaseDataMaster {
     /**
      * Add new event on data base or rewrite last event
      */
-    public void insertEvent(String appName, String date) {
+    public void insertEvent(String appPackage, String date) {
         if (database == null || !database.isOpen()) {
             database = dbCreator.getWritableDatabase();
         }
+
+        PackageManager packageManager = context.getApplicationContext().getPackageManager();
+        String appName = "";
+        try {
+            appName = (String) packageManager
+                    .getApplicationLabel(packageManager.getApplicationInfo(appPackage, PackageManager.GET_META_DATA));
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+
         String query = "SELECT * FROM " + BaseDataHelper.Event.TABLE_NAME;
         Cursor cursor = database.rawQuery(query, null);
         String eventId = "";
@@ -62,6 +77,7 @@ public class BaseDataMaster {
                 // Создаем новою запись
                 ContentValues contentValues = new ContentValues();
                 contentValues.put(BaseDataHelper.Event.EVENT_NAME, appName);
+                contentValues.put(BaseDataHelper.Event.EVENT_PACKAGE,appPackage);
                 contentValues.put(BaseDataHelper.Event.EVENT_TIME_START, date);
                 database.insert(BaseDataHelper.Event.TABLE_NAME, null, contentValues);
             }
@@ -69,7 +85,7 @@ public class BaseDataMaster {
 
         } else {
             ContentValues contentValues = new ContentValues();
-            contentValues.put(BaseDataHelper.Event.EVENT_NAME, appName);
+            contentValues.put(BaseDataHelper.Event.EVENT_NAME, appPackage);
             contentValues.put(BaseDataHelper.Event.EVENT_TIME_START, date);
             database.insert(BaseDataHelper.Event.TABLE_NAME, null, contentValues);
         }
@@ -78,11 +94,7 @@ public class BaseDataMaster {
 
     }
 
-    public void deleteItem(String itemKey) {
-//         database.delete(BaseDataHelper.User.TABLE_NAME, BaseDataHelper.User.MAIN_KEY + "='" + itemKey + "'", null);
-    }
-
-    public ArrayList<EventModel> getEvents() {
+    public ArrayList<AppListModel> getEvents() {
         if (database == null || !database.isOpen()) {
             database = dbCreator.getWritableDatabase();
         }
@@ -91,17 +103,19 @@ public class BaseDataMaster {
 
         Cursor cursor = database.rawQuery(query, null);
 
-        ArrayList<EventModel> list = new ArrayList<>();
+        ArrayList<AppListModel> list = new ArrayList<>();
 
         try {
             cursor.moveToFirst();
             while (!cursor.isAfterLast()) {
-                EventModel eventModel = new EventModel(
+                AppListModel app = new AppListModel(
                         cursor.getString(cursor.getColumnIndexOrThrow(BaseDataHelper.Event.EVENT_NAME)),
+                        cursor.getString(cursor.getColumnIndexOrThrow(BaseDataHelper.Event.EVENT_PACKAGE)),
+                        "",
                         cursor.getString(cursor.getColumnIndexOrThrow(BaseDataHelper.Event.EVENT_TIME_START)),
                         cursor.getString(cursor.getColumnIndexOrThrow(BaseDataHelper.Event.EVENT_TIME_END))
                 );
-                list.add(eventModel);
+                list.add(app);
                 cursor.moveToNext();
             }
         } catch (Exception e) {
@@ -112,5 +126,47 @@ public class BaseDataMaster {
         Log.d(LOG_TAG, "return event = " + list.size());
 
         return list;
+    }
+
+    public void insertScreenState(String time){
+
+        if (database == null || !database.isOpen()) {
+            database = dbCreator.getWritableDatabase();
+        }
+        String query = "SELECT * FROM " + BaseDataHelper.ScreenWork.TABLE_NAME;
+        Cursor cursor = database.rawQuery(query, null);
+        String eventId = "";
+        if (!cursor.isAfterLast()) {
+            cursor.moveToLast();
+            String lastTimeScreenOff = "";
+            try {
+                eventId = cursor.getString(cursor.getColumnIndexOrThrow(BaseDataHelper.ScreenWork._ID));
+                lastTimeScreenOff = cursor.getString(cursor.getColumnIndexOrThrow(BaseDataHelper.ScreenWork.SCREEN_OFF));
+            } catch (NullPointerException e) {
+                e.printStackTrace();
+            }
+
+            if (lastTimeScreenOff == null) {
+                // Обновляем последнюю запись
+                ContentValues contentValues = new ContentValues();
+                contentValues.put(BaseDataHelper.ScreenWork.SCREEN_OFF, time);
+                database.update(BaseDataHelper.ScreenWork.TABLE_NAME, contentValues, "_id = ?",
+                        new String[]{eventId});
+
+            } else {
+                // Создаем новою запись
+                ContentValues contentValues = new ContentValues();
+                contentValues.put(BaseDataHelper.ScreenWork.SCREEN_ON,time);
+                database.insert(BaseDataHelper.ScreenWork.TABLE_NAME, null, contentValues);
+            }
+
+
+        } else {
+            ContentValues contentValues = new ContentValues();
+            contentValues.put(BaseDataHelper.ScreenWork.SCREEN_ON, time);
+            database.insert(BaseDataHelper.ScreenWork.TABLE_NAME, null, contentValues);
+        }
+        cursor.close();
+        dbCreator.close();
     }
 }

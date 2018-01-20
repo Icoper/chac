@@ -5,12 +5,12 @@ package com.appsx.childrensactivitycontrol.model;
  */
 
 public class EventModel {
-    String appName;
+    String appPackage;
     String timeStart;
     String timeEnd;
 
-    public EventModel(String appName, String timeStart, String timeEnd) {
-        this.appName = appName;
+    public EventModel(String appPackage, String timeStart, String timeEnd) {
+        this.appPackage = appPackage;
         this.timeStart = timeStart;
         this.timeEnd = timeEnd;
     }
@@ -18,12 +18,12 @@ public class EventModel {
     public EventModel() {
     }
 
-    public String getAppName() {
-        return appName;
+    public String getAppPackage() {
+        return appPackage;
     }
 
-    public void setAppName(String appName) {
-        this.appName = appName;
+    public void setAppPackage(String appPackage) {
+        this.appPackage = appPackage;
     }
 
     public String getTimeStart() {

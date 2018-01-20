@@ -1,4 +1,4 @@
-package com.appsx.childrensactivitycontrol.app_name_util;
+package com.appsx.childrensactivitycontrol.util.app_name;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;

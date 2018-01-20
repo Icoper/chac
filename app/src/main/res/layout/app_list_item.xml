@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="4dp">
+
+    <LinearLayout
+        android:paddingTop="2dp"
+        android:paddingBottom="2dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:layout_weight="0"
+            android:id="@+id/app_icon_list"
+            tools:background="@drawable/ic_info_outline_black_48dp"
+            android:padding="4dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp" />
+
+        <LinearLayout
+            android:layout_weight="1"
+            android:paddingStart="4dp"
+            android:layout_gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/app_name_list"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="18sp"
+                tools:text="App name" />
+
+            <TextView
+                android:id="@+id/app_time_list"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/colorBorderGrey"
+                android:textSize="14sp"
+                tools:text="02:12:13 h" />
+        </LinearLayout>
+
+        <ImageView
+            android:layout_gravity="center"
+            android:layout_weight="0"
+            android:id="@+id/app_more_list"
+            android:background="@drawable/ic_expand_more_black_48dp"
+            android:layout_width="25dp"
+            android:layout_height="25dp" />
+
+
+    </LinearLayout>
+
+    <TextView
+        android:background="@color/colorBorderGrey"
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp" />
+
+
+</LinearLayout>

@@ -12,7 +12,6 @@ import android.view.MenuItem;
 import com.appsx.childrensactivitycontrol.fragment.AboutAppFragment;
 import com.appsx.childrensactivitycontrol.fragment.AddDeviceFragment;
 import com.appsx.childrensactivitycontrol.fragment.StatisticFragment;
-import com.willme.topactivity.R;
 
 public class MainActivity extends AppCompatActivity {
 

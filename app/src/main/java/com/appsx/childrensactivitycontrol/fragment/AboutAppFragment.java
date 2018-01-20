@@ -8,7 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.willme.topactivity.R;
+import com.appsx.childrensactivitycontrol.R;
 
 
 @TargetApi(Build.VERSION_CODES.HONEYCOMB)

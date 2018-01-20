@@ -1,4 +1,4 @@
-package com.appsx.childrensactivitycontrol.app_name_util;
+package com.appsx.childrensactivitycontrol.util.app_name;
 
 /**
  * Created by dmitriysamoilov on 04.01.18.
