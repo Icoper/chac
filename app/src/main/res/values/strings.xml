@@ -11,8 +11,10 @@
         <string name="time_period_start">From :</string>
         <string name="time_period_end">To :</string>
         <string name="time_period_all">All time</string>
-        <string name="time_period_today">Today</string>
+        <string name="time_period_custom">Custom</string>
     <string name="list_app_text">Used apps statistic</string>
+    <string name="time_period_wrong">Time period is wrong</string>
+    <string name="screen_work_statistic">Screen work statistic</string>
 
     //AboutAppFragment
     <string name="about_title">About</string>
@@ -21,4 +23,12 @@
     <string name="addDevice_title">Device\'s</string>
     <string name="action_ok">OK</string>
     <string name="action_cancel">Cancel</string>
+
+    //Other
+    <string name="update_text">Update</string>
+    <string name="confirm_text">Confirm</string>
+    <string name="cancel_text">Cancel</string>
+    <string name="hours_text">h.</string>
+    <string name="minutes_text">m.</string>
+    <string name="seconds_text">s.</string>
 </resources>

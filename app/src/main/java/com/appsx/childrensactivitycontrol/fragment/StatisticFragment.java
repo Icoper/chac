@@ -4,9 +4,11 @@ package com.appsx.childrensactivitycontrol.fragment;
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.AppOpsManager;
+import android.app.DatePickerDialog;
+import android.app.Dialog;
+import android.app.DialogFragment;
 import android.app.Fragment;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
@@ -16,32 +18,32 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.appsx.childrensactivitycontrol.R;
 import com.appsx.childrensactivitycontrol.database.BaseDataMaster;
+import com.appsx.childrensactivitycontrol.database.SPHelper;
 import com.appsx.childrensactivitycontrol.model.AppListModel;
+import com.appsx.childrensactivitycontrol.util.AlertDialogShower;
+import com.appsx.childrensactivitycontrol.util.AppListHandler;
+import com.appsx.childrensactivitycontrol.util.GlobalNames;
 import com.appsx.childrensactivitycontrol.util.app_name.ToastShower;
 import com.appsx.childrensactivitycontrol.util.app_name.WatchingService;
-import com.appsx.childrensactivitycontrol.database.SPHelper;
-import com.appsx.childrensactivitycontrol.R;
 
-import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -50,6 +52,8 @@ import java.util.Date;
 
 @TargetApi(Build.VERSION_CODES.HONEYCOMB)
 public class StatisticFragment extends Fragment implements CompoundButton.OnCheckedChangeListener, View.OnClickListener {
+
+    private static String[] timePeriodStore;
 
     private Intent serviceIntent;
     private Context context;
@@ -61,14 +65,21 @@ public class StatisticFragment extends Fragment implements CompoundButton.OnChec
     private Switch startListening;
     private RecyclerView listRecyclerView;
     private TextView periodStatisticTv;
+    private static TextView timePeriodFromTv;
+    private static TextView timePeriodToTv;
     private LinearLayout linearLayoutPeriod;
+    private LinearLayout linearLayoutPeriodFrom;
+    private LinearLayout linearLayoutPeriodTo;
+    private Button updateTimeFilterBtn;
     private ProgressBar loadAppsProgress;
     private ImageView moreDetTimePerIv;
+    // use dataKey = "start" or dataKey = "end"
+    private static String dataKey;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.statistic_fragment, container, false);
-        fragmentView = v;
+
+        fragmentView = inflater.inflate(R.layout.statistic_fragment, container, false);
         context = getActivity().getApplicationContext();
 
         return fragmentView;
@@ -95,6 +106,15 @@ public class StatisticFragment extends Fragment implements CompoundButton.OnChec
         listRecyclerView.setLayoutManager(layoutManager);
         listRecyclerView.setHasFixedSize(true);
 
+        linearLayoutPeriodFrom = (LinearLayout) getView().findViewById(R.id.ad_time_p_from);
+        linearLayoutPeriodTo = (LinearLayout) getView().findViewById(R.id.ad_time_p_to);
+        linearLayoutPeriodFrom.setOnClickListener(this);
+        linearLayoutPeriodTo.setOnClickListener(this);
+        timePeriodFromTv = (TextView) getView().findViewById(R.id.ad_time_p_from_tv);
+        timePeriodToTv = (TextView) getView().findViewById(R.id.ad_time_p_to_tv);
+        updateTimeFilterBtn = (Button) getView().findViewById(R.id.ad_time_update_btn);
+        updateTimeFilterBtn.setOnClickListener(this);
+
         periodStatisticTv = (TextView) getView().findViewById(R.id.sf_time_period_text);
         setupPeriodTextView("", "");
         moreDetTimePerIv = (ImageView) getView().findViewById(R.id.sf_time_period_more);
@@ -110,7 +130,7 @@ public class StatisticFragment extends Fragment implements CompoundButton.OnChec
     private void setupPeriodTextView(String start, String end) {
         // We set the first and last day of the previous month in textView
         if (start.isEmpty() || end.isEmpty()) {
-            periodStatisticTv.setText(getString(R.string.time_period_today));
+            periodStatisticTv.setText(getString(R.string.time_period_all));
         } else {
             periodStatisticTv.setText(getString(R.string.time_period_start) + start +
                     getString(R.string.time_period_end) + end);
@@ -164,7 +184,69 @@ public class StatisticFragment extends Fragment implements CompoundButton.OnChec
             case R.id.sf_time_period_more:
                 showTimePeriodSelector();
                 break;
+            case R.id.ad_time_p_from:
+                openCalendar(id);
+                break;
+            case R.id.ad_time_p_to:
+                openCalendar(id);
+                break;
+            case R.id.ad_time_update_btn:
+                updateTimeFilter();
+                break;
         }
+    }
+
+    private void updateTimeFilter() {
+        try {
+            if (!timePeriodStore[GlobalNames.START_PERIOD_ID].isEmpty() &&
+                    !timePeriodStore[GlobalNames.END_PERIOD_ID].isEmpty()) {
+                String startData = timePeriodStore[GlobalNames.START_PERIOD_ID];
+                String endData = timePeriodStore[GlobalNames.END_PERIOD_ID];
+
+                SimpleDateFormat dateFormat = new SimpleDateFormat("dd / MM / yyyy");
+                long filterDateStart = 0;
+                long filterDataEnd = 0;
+                try {
+                    Date start = dateFormat.parse(startData);
+                    filterDateStart = start.getTime();
+                    Date end = dateFormat.parse(endData);
+                    filterDataEnd = end.getTime();
+                    if (filterDateStart > filterDataEnd){
+                        Toast.makeText(context,context.getString(R.string.time_period_wrong),Toast.LENGTH_SHORT).show();
+                    }else {
+                        periodStatisticTv.setText(getString(R.string.time_period_custom));
+                        loadAppsProgress.setVisibility(View.VISIBLE);
+                        LoadAppsToListView longTask = new LoadAppsToListView();
+                        longTask.execute();
+                    }
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+            } else {
+                periodStatisticTv.setText(getString(R.string.time_period_custom));
+                loadAppsProgress.setVisibility(View.VISIBLE);
+                LoadAppsToListView longTask = new LoadAppsToListView();
+                longTask.execute();
+            }
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+            Toast.makeText(context, getString(R.string.time_period_wrong), Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void openCalendar(int view_id) {
+        // Проверяем userDataMap на null.
+        if (timePeriodStore == null) {
+            timePeriodStore = new String[2];
+        }
+
+        DialogFragment dialogFragment = new StatisticFragment.DatePicker();
+        if (view_id == R.id.ad_time_p_from) {
+            dataKey = "start";
+        } else if (view_id == R.id.ad_time_p_to) {
+            dataKey = "end";
+        }
+        dialogFragment.show(getFragmentManager(), "dataPicker");
     }
 
     private void showTimePeriodSelector() {
@@ -182,7 +264,23 @@ public class StatisticFragment extends Fragment implements CompoundButton.OnChec
         protected ArrayList<AppListModel> doInBackground(Void... noargs) {
             BaseDataMaster dataMaster = BaseDataMaster.getDataMaster(context);
             ArrayList<AppListModel> appListTemp = dataMaster.getEvents();
-            for (AppListModel model : appListTemp) {
+
+            return reformatAppList(appListTemp);
+        }
+
+        private ArrayList<AppListModel> reformatAppList(ArrayList<AppListModel> appListTemp) {
+            AppListHandler appListHandler = new AppListHandler(GlobalNames.MODE_ALL_TIME, null,context);
+
+            try {
+                if (timePeriodStore.length != 0) {
+                    appListHandler = new AppListHandler("", timePeriodStore,context);
+                }
+            } catch (NullPointerException e) {
+                e.printStackTrace();
+            }
+
+            ArrayList<AppListModel> finalList = appListHandler.reformatList(appListTemp);
+            for (AppListModel model : finalList) {
                 String checkedString = "";
                 try {
                     checkedString = model.getDataEnd();
@@ -194,17 +292,21 @@ public class StatisticFragment extends Fragment implements CompoundButton.OnChec
                     checkedString = "";
                 }
                 if (!checkedString.isEmpty()) {
-                    long timeEnd = Long.parseLong(model.getDataEnd());
-                    long timeStart = Long.parseLong(model.getDataStart());
-                    long time = timeEnd - timeStart;
+                    long time = Long.parseLong(model.getTime());
+
                     long seconds = (int) (time / 1000) % 60;
                     long min = (int) (time / (1000 * 60)) % 60;
                     long hours = (int) (time / (1000 * 60 * 60)) % 24;
-                    model.setTime(hours + ":" + min + ":" + seconds);
+                    model.setFormatedTime(
+                            hours + " " + getString(R.string.hours_text) + " " +
+                                    min + " " + getString(R.string.minutes_text) + " " +
+                                    seconds + " " + getString(R.string.seconds_text));
+                } else {
+                    model.setFormatedTime("?");
                 }
 
             }
-            return appListTemp;
+            return finalList;
         }
 
         @Override
@@ -214,6 +316,75 @@ public class StatisticFragment extends Fragment implements CompoundButton.OnChec
             AppArrayAdapter appAdapter = new AppArrayAdapter(appList);
             listRecyclerView.setAdapter(appAdapter);
             loadAppsProgress.setVisibility(View.INVISIBLE);
+        }
+
+
+    }
+
+    /**
+     * This class is used to show the user a DataPicker dialog
+     * It implements the logic of storing a start and end date in HashMap
+     */
+    @SuppressLint("ValidFragment")
+    public static class DatePicker extends DialogFragment
+            implements DatePickerDialog.OnDateSetListener {
+
+        // The key is responsible for what date we are reading, start data or end data;
+        // key can have 2 values: start or end;
+        private String key = null;
+
+        /**
+         * Show User DataPiker dialog
+         */
+        @Override
+        public Dialog onCreateDialog(Bundle savedInstanceState) {
+            // determine the current date
+            final Calendar c = Calendar.getInstance();
+            int year = c.get(Calendar.YEAR);
+            int month = c.get(Calendar.MONTH);
+            int day = c.get(Calendar.DAY_OF_MONTH);
+
+            Dialog picker = new DatePickerDialog(getActivity(), this,
+                    year, month, day);
+            return picker;
+        }
+
+        /**
+         * The method stores the data received by the dataPicker from the user
+         * *
+         * * @param datePicker - calendar widget
+         * * @param year is the year chosen by the user
+         * * @param month - the month chosen by the user
+         * * @param day - day selected by the user
+         */
+        @Override
+        public void onDateSet(android.widget.DatePicker datePicker, int year,
+                              int month, int day) {
+            // Declare the EditText variable, which we will later assign a link to
+            // startData || endDataTv (EditText)
+            // This is necessary in order to specify the selected date in the correct EditText
+            TextView varEditText = timePeriodFromTv;
+            String date = day + " / " + ++month + " / " + year;
+            String formDate = "";
+            key = dataKey;
+            // Depending on the key, we assign varEditText the link we need
+            if (key != null) {
+                if (key.equals("start")) {
+                    varEditText = timePeriodFromTv;
+                    // Save the data in the periodStore
+                    timePeriodStore[GlobalNames.START_PERIOD_ID] = date;
+                    formDate = getString(R.string.time_period_start) + " 00:00 " + getString(R.string.hours_text) +
+                            " " + date;
+                } else {
+                    varEditText = timePeriodToTv;
+                    // Save the data in the periodStore
+                    timePeriodStore[GlobalNames.END_PERIOD_ID] = date;
+                    formDate = getString(R.string.time_period_end) + " 24:00 " + getString(R.string.hours_text) +
+                            " " + date;
+                }
+            }
+            // set new var in TextView
+            varEditText.setText(formDate);
         }
     }
 
@@ -240,7 +411,7 @@ public class StatisticFragment extends Fragment implements CompoundButton.OnChec
             final int position = i;
 
             appViewHolder.appName.setText(appList.get(position).getName());
-            appViewHolder.time.setText(appList.get(position).getTime());
+            appViewHolder.time.setText(appList.get(position).getFormatedTime());
             try {
                 Drawable _icon = context.getPackageManager().getApplicationIcon(appList.get(position).getAppPackage());
                 appViewHolder.icon.setImageDrawable(_icon);
@@ -251,16 +422,19 @@ public class StatisticFragment extends Fragment implements CompoundButton.OnChec
             appViewHolder.icon.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    // TODO Иконки приложения доступны только на устройстве с которого собирается статистика
                     Toast.makeText(getActivity().getBaseContext(), "In develop\n" + appList.get(position).getName(), Toast.LENGTH_SHORT).show();
                 }
             });
             appViewHolder.more.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    new AlertDialogShower(fragmentView.getContext()).showAlertDialog(null,appList.get(position).getName());
                     Toast.makeText(getActivity().getBaseContext(), "In develop\n" + appList.get(position).getName(), Toast.LENGTH_SHORT).show();
                 }
             });
         }
+
 
         @Override
         public int getItemCount() {

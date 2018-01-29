@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorBorderGrey"
+    android:background="@color/colorBlue"
     android:orientation="horizontal">
 
     <ScrollView
@@ -35,7 +35,7 @@
                     android:textStyle="bold" />
 
                 <Switch
-                    tools:checked="true"
+                    android:checked="false"
                     android:id="@+id/sf_start_chac_switch"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -97,14 +97,15 @@
                             android:id="@+id/sf_time_period_text"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="@string/time_period_today"/>
+                            android:text="@string/time_period_all"/>
                     </LinearLayout>
+
                     <ImageView
                         android:paddingEnd="8dp"
                         android:id="@+id/sf_time_period_more"
-                        android:layout_gravity="center"
+                        android:layout_gravity="top"
                         android:layout_weight="0"
-                        android:background="@drawable/ic_expand_more_black_48dp"
+                        android:background="@drawable/ic_more_horiz_black_48dp"
                         android:layout_width="30dp"
                         android:layout_height="30dp" />
                 </LinearLayout>
@@ -152,9 +153,14 @@
                     <ImageView
                         android:background="@drawable/ic_date_range_black_48dp"
                         android:layout_width="32dp"
-                        android:layout_height="32dp"></ImageView>
+                        android:layout_height="32dp">
+                    </ImageView>
                 </LinearLayout>
-
+                <Button
+                    android:text="@string/update_text"
+                    android:id="@+id/ad_time_update_btn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
 
             </LinearLayout>
 

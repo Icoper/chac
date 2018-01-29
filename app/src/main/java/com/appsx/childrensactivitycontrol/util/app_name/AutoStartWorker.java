@@ -6,7 +6,7 @@ import android.content.Intent;
 
 import com.appsx.childrensactivitycontrol.database.SPHelper;
 
-public class AutoStrartWorker extends BroadcastReceiver {
+public class AutoStartWorker extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         if (SPHelper.isServiceRunning(context)){

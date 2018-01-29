@@ -8,7 +8,7 @@ public class SPHelper {
 
     public static boolean isServiceRunning(Context context){
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
-        return sp.getBoolean("is_running", true);
+        return sp.getBoolean("is_running", false);
     }
 
     public static void setIsServiceRunning(Context context, boolean isRunning){
@@ -24,6 +24,6 @@ public class SPHelper {
 
     public static boolean isIsScreenOn(Context context){
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
-        return sp.getBoolean("is_screen_on", true);
+        return sp.getBoolean("is_screen_on", false);
     }
 }

@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.appsx.childrensactivitycontrol">
 
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
     <uses-permission android:name="android.permission.GET_TASKS" />
     <uses-permission android:name="android.permission.PACKAGE_USAGE_STATS"
         tools:ignore="ProtectedPermissions" />
@@ -13,7 +14,6 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:resizeableActivity="true"
-        android:roundIcon="@mipmap/ic_launcher_round"
         android:theme="@style/Theme.Design.Light.NoActionBar">
         <activity
             android:name="com.appsx.childrensactivitycontrol.MainActivity"
@@ -27,7 +27,14 @@
 
         </activity>
 
-        <receiver android:name="com.appsx.childrensactivitycontrol.util.app_name.AutoStrartWorker">
+        <receiver android:name=".util.screen.ScreenBroadCastReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.SCREEN_OFF"/>
+                <action android:name="android.intent.action.SCREEN_ON"/>
+            </intent-filter>
+        </receiver>
+
+        <receiver android:name="com.appsx.childrensactivitycontrol.util.app_name.AutoStartWorker">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED"></action>
             </intent-filter>

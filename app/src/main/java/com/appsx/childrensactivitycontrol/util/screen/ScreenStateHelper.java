@@ -9,20 +9,20 @@ import android.os.PowerManager;
 
 public class ScreenStateHelper {
     private Context context;
-    private   PowerManager powerManager;
+    private PowerManager powerManager;
 
     public ScreenStateHelper(Context context) {
         this.context = context;
     }
 
-    public boolean isScreenOn(){
+    public boolean isScreenOn() {
 
         if (powerManager == null) {
             powerManager = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
         }
-        if (android.os.Build.VERSION.SDK_INT <= android.os.Build.VERSION_CODES.LOLLIPOP){
+        if (android.os.Build.VERSION.SDK_INT <= android.os.Build.VERSION_CODES.LOLLIPOP) {
             return powerManager.isScreenOn();
-        }else {
+        } else {
             return powerManager.isInteractive();
         }
     }
