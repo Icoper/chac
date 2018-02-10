@@ -25,5 +25,11 @@
         <item name="android:windowAnimationStyle">@android:style/Animation</item>
         <item name="android:colorBackgroundCacheHint">@null</item>
     </style>
+    <!-- Alert Dialog -->
+    <style name="MyAlertDialogTheme" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <item name="colorAccent">@color/colorBlue</item>
+        <item name="android:colorBackground">@color/colorBorderGrey</item>
+        <item name="android:windowBackground">@color/colorBlue</item>
+    </style>
 
 </resources>

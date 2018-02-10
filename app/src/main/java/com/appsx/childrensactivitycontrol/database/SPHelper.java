@@ -24,6 +24,6 @@ public class SPHelper {
 
     public static boolean isIsScreenOn(Context context){
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
-        return sp.getBoolean("is_screen_on", false);
+        return sp.getBoolean("is_screen_on", true);
     }
 }

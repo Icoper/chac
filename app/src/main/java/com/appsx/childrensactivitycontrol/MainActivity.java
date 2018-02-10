@@ -27,18 +27,21 @@ public class MainActivity extends AppCompatActivity {
         @RequiresApi(api = Build.VERSION_CODES.HONEYCOMB)
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+            transaction = getFragmentManager().beginTransaction();
             switch (item.getItemId()) {
                 case R.id.navigation_statistic:
-                    transaction.replace(R.id.fragment_container,statisticFragment);
-                    return true;
+                    transaction.replace(R.id.fragment_container, statisticFragment);
+                    break;
                 case R.id.navigation_device:
-                    transaction.replace(R.id.fragment_container,addDeviceFragment);
-                    return true;
+                    transaction.replace(R.id.fragment_container, addDeviceFragment);
+                    break;
                 case R.id.navigation_info:
-                    transaction.replace(R.id.fragment_container,aboutAppFragment);
-                    return true;
+                    transaction.replace(R.id.fragment_container, aboutAppFragment);
+                    break;
             }
-            return false;
+            transaction.addToBackStack(null);
+            transaction.commit();
+            return true;
         }
     };
 
@@ -62,7 +65,7 @@ public class MainActivity extends AppCompatActivity {
         addDeviceFragment = new AddDeviceFragment();
 
         transaction = getFragmentManager().beginTransaction();
-        transaction.add(R.id.fragment_container,statisticFragment);
+        transaction.add(R.id.fragment_container, statisticFragment);
         transaction.commit();
     }
 

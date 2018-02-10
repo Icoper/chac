@@ -36,6 +36,7 @@ import android.widget.Toast;
 import com.appsx.childrensactivitycontrol.R;
 import com.appsx.childrensactivitycontrol.database.BaseDataMaster;
 import com.appsx.childrensactivitycontrol.database.SPHelper;
+import com.appsx.childrensactivitycontrol.model.AppInfoListModel;
 import com.appsx.childrensactivitycontrol.model.AppListModel;
 import com.appsx.childrensactivitycontrol.util.AlertDialogShower;
 import com.appsx.childrensactivitycontrol.util.AppListHandler;
@@ -59,6 +60,8 @@ public class StatisticFragment extends Fragment implements CompoundButton.OnChec
     private Context context;
     private View fragmentView;
     private ArrayList<AppListModel> appList;
+    private ArrayList<AppListModel> periodAppList;
+    private ArrayList<AppListModel> dbAppList;
 
     // View
     private LinearLayoutManager layoutManager;
@@ -263,9 +266,9 @@ public class StatisticFragment extends Fragment implements CompoundButton.OnChec
         @Override
         protected ArrayList<AppListModel> doInBackground(Void... noargs) {
             BaseDataMaster dataMaster = BaseDataMaster.getDataMaster(context);
-            ArrayList<AppListModel> appListTemp = dataMaster.getEvents();
+            dbAppList = dataMaster.getEvents();
 
-            return reformatAppList(appListTemp);
+            return reformatAppList(dbAppList);
         }
 
         private ArrayList<AppListModel> reformatAppList(ArrayList<AppListModel> appListTemp) {
@@ -373,13 +376,13 @@ public class StatisticFragment extends Fragment implements CompoundButton.OnChec
                     varEditText = timePeriodFromTv;
                     // Save the data in the periodStore
                     timePeriodStore[GlobalNames.START_PERIOD_ID] = date;
-                    formDate = getString(R.string.time_period_start) + " 00:00 " + getString(R.string.hours_text) +
+                    formDate = getString(R.string.time_period_start) + " 00:00" + getString(R.string.hours_text) +
                             " " + date;
                 } else {
                     varEditText = timePeriodToTv;
                     // Save the data in the periodStore
                     timePeriodStore[GlobalNames.END_PERIOD_ID] = date;
-                    formDate = getString(R.string.time_period_end) + " 24:00 " + getString(R.string.hours_text) +
+                    formDate = getString(R.string.time_period_end) + " 24:00" + getString(R.string.hours_text) +
                             " " + date;
                 }
             }
@@ -429,9 +432,20 @@ public class StatisticFragment extends Fragment implements CompoundButton.OnChec
             appViewHolder.more.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    new AlertDialogShower(fragmentView.getContext()).showAlertDialog(null,appList.get(position).getName());
-                    Toast.makeText(getActivity().getBaseContext(), "In develop\n" + appList.get(position).getName(), Toast.LENGTH_SHORT).show();
+                    AppListHandler appListHandler = new AppListHandler(GlobalNames.MODE_ALL_TIME, null, context);
+
+                    try {
+                        if (timePeriodStore.length != 0) {
+                            appListHandler = new AppListHandler("", timePeriodStore, context);
+                        }
+                    } catch (NullPointerException e) {
+                        e.printStackTrace();
+                    }
+                    AppInfoListModel appInfo = appListHandler.getAppInfoByPackage(dbAppList, appList.get(position).getName());
+                    new AlertDialogShower(fragmentView.getContext()).showAlertDialog(appInfo, getFragmentManager());
+
                 }
+
             });
         }
 

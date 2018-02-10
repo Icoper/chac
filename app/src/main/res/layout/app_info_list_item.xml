@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:padding="8dp">
+
+    <TextView
+        android:padding="8dp"
+        android:elevation="8dp"
+        android:backgroundTint="@color/colorBlue"
+        android:id="@+id/ai_date_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/item_container"
+        tools:text='27.01.2018' />
+
+    <TextView
+        android:layout_width="8dp"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:elevation="2dp"
+        android:background="@drawable/item_container"
+        android:padding="8dp"
+        android:layout_margin="8dp"
+        android:id="@+id/ai_list_date_tv"
+        android:text="@string/app_info_empty"
+        tools:text="8:21:21-8:25:12,
+8:21:21-8:25:12,
+8:21:21-8:25:12,
+8:21:21-8:25:12,
+8:21:21-8:25:12,
+8:21:21-8:25:12"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+</LinearLayout>

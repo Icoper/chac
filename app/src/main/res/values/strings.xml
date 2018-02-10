@@ -15,7 +15,7 @@
     <string name="list_app_text">Used apps statistic</string>
     <string name="time_period_wrong">Time period is wrong</string>
     <string name="screen_work_statistic">Screen work statistic</string>
-
+    <string name="app_info_empty">Not launch in that day</string>
     //AboutAppFragment
     <string name="about_title">About</string>
 

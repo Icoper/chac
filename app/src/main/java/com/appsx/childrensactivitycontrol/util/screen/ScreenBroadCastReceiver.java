@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.util.Log;
 
 import com.appsx.childrensactivitycontrol.database.BaseDataMaster;
+import com.appsx.childrensactivitycontrol.database.SPHelper;
 import com.appsx.childrensactivitycontrol.util.GlobalNames;
 
 public class ScreenBroadCastReceiver extends BroadcastReceiver {
@@ -19,9 +20,12 @@ public class ScreenBroadCastReceiver extends BroadcastReceiver {
             dataMaster = BaseDataMaster.getDataMaster(context);
         }
         if (intent.getAction().equals(Intent.ACTION_SCREEN_OFF)) {
+            SPHelper.setIsScreenOn(context, false);
             dataMaster.insertEvent(GlobalNames.END_LAST_APP, String.valueOf(System.currentTimeMillis()));
             Log.d(LOG_TAG, "Screen went OFF");
         } else if (intent.getAction().equals(Intent.ACTION_SCREEN_ON)) {
+            dataMaster.repeatLastEvent(String.valueOf(System.currentTimeMillis()));
+            SPHelper.setIsScreenOn(context, true);
             Log.i(LOG_TAG, "Screen went ON");
         }
     }

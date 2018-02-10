@@ -39,6 +39,7 @@ public class BaseDataMaster {
      * Add new event on data base or rewrite last event
      */
     public synchronized void insertEvent(String appPackage, String date) {
+
         if (database == null || !database.isOpen()) {
             database = dbCreator.getWritableDatabase();
         }
@@ -46,12 +47,15 @@ public class BaseDataMaster {
         PackageManager packageManager = context.getApplicationContext().getPackageManager();
         String appName = "";
         try {
-            appName = (String) packageManager
-                    .getApplicationLabel(packageManager.getApplicationInfo(appPackage, PackageManager.GET_META_DATA));
+            if (!appPackage.equals(GlobalNames.END_LAST_APP)) {
+                appName = (String) packageManager
+                        .getApplicationLabel(packageManager.getApplicationInfo(appPackage, PackageManager.GET_META_DATA));
+            }
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
         }
-        if (!appName.isEmpty() && !appName.equals(GlobalNames.END_LAST_APP)) {
+        if (!appName.isEmpty() && !appName.equals(GlobalNames.END_LAST_APP) && SPHelper.isIsScreenOn(context)) {
+
             String query = "SELECT * FROM " + BaseDataHelper.Event.TABLE_NAME;
             Cursor cursor = database.rawQuery(query, null);
             String eventId = "";
@@ -68,13 +72,22 @@ public class BaseDataMaster {
 
                 if (lastEventDataEnd == null) {
                     // Обновляем последнюю запись
+                    Log.d(LOG_TAG, "insertEvent - update last");
                     ContentValues contentValues = new ContentValues();
                     contentValues.put(BaseDataHelper.Event.EVENT_TIME_END, date);
                     database.update(BaseDataHelper.Event.TABLE_NAME, contentValues, "_id = ?",
                             new String[]{eventId});
+                    // Создаем новою запись
+                    Log.d(LOG_TAG, "insertEvent - create new : " + appPackage);
+                    ContentValues _contentValues = new ContentValues();
+                    _contentValues.put(BaseDataHelper.Event.EVENT_NAME, appName);
+                    _contentValues.put(BaseDataHelper.Event.EVENT_PACKAGE, appPackage);
+                    _contentValues.put(BaseDataHelper.Event.EVENT_TIME_START, date);
+                    database.insert(BaseDataHelper.Event.TABLE_NAME, null, _contentValues);
 
                 } else {
                     // Создаем новою запись
+                    Log.d(LOG_TAG, "insertEvent - create new : " + appPackage);
                     ContentValues contentValues = new ContentValues();
                     contentValues.put(BaseDataHelper.Event.EVENT_NAME, appName);
                     contentValues.put(BaseDataHelper.Event.EVENT_PACKAGE, appPackage);
@@ -84,6 +97,7 @@ public class BaseDataMaster {
 
 
             } else {
+                Log.d(LOG_TAG, "insertEvent - create first point");
                 ContentValues contentValues = new ContentValues();
                 contentValues.put(BaseDataHelper.Event.EVENT_NAME, appName);
                 contentValues.put(BaseDataHelper.Event.EVENT_PACKAGE, appPackage);
@@ -91,7 +105,7 @@ public class BaseDataMaster {
                 database.insert(BaseDataHelper.Event.TABLE_NAME, null, contentValues);
                 cursor.close();
             }
-        } else if (appName.equals(GlobalNames.END_LAST_APP)) {
+        } else if (appPackage.equals(GlobalNames.END_LAST_APP)) {
             String query = "SELECT * FROM " + BaseDataHelper.Event.TABLE_NAME;
             Cursor cursor = database.rawQuery(query, null);
             String eventId = "";
@@ -107,6 +121,7 @@ public class BaseDataMaster {
                 }
 
                 if (lastEventDataEnd == null) {
+                    Log.d(LOG_TAG, "insertEvent - update last(screen off)");
                     // Обновляем последнюю запись
                     ContentValues contentValues = new ContentValues();
                     contentValues.put(BaseDataHelper.Event.EVENT_TIME_END, date);
@@ -118,6 +133,37 @@ public class BaseDataMaster {
             cursor.close();
         }
         dbCreator.close();
+
+    }
+
+    public void repeatLastEvent(String date) {
+        if (database == null || !database.isOpen()) {
+            database = dbCreator.getWritableDatabase();
+        }
+
+        String query = "SELECT * FROM " + BaseDataHelper.Event.TABLE_NAME;
+        Cursor cursor = database.rawQuery(query, null);
+        String eventId = "";
+
+        cursor.moveToLast();
+        String lastEventName = "";
+        String lastEventPackage = "";
+        try {
+            eventId = cursor.getString(cursor.getColumnIndexOrThrow(BaseDataHelper.Event._ID));
+            lastEventName = cursor.getString(cursor.getColumnIndexOrThrow(BaseDataHelper.Event.EVENT_NAME));
+            lastEventPackage = cursor.getString(cursor.getColumnIndexOrThrow(BaseDataHelper.Event.EVENT_PACKAGE));
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+        }
+
+        // Создаем новою запись
+        Log.d(LOG_TAG, "insertEvent - create new : " + lastEventPackage);
+        ContentValues _contentValues = new ContentValues();
+        _contentValues.put(BaseDataHelper.Event.EVENT_NAME, lastEventName);
+        _contentValues.put(BaseDataHelper.Event.EVENT_PACKAGE, lastEventPackage);
+        _contentValues.put(BaseDataHelper.Event.EVENT_TIME_START, date);
+        database.insert(BaseDataHelper.Event.TABLE_NAME, null, _contentValues);
+
 
     }
 

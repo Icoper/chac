@@ -10,17 +10,12 @@ import android.view.ViewGroup;
 
 import com.appsx.childrensactivitycontrol.R;
 
-/**
- * Created by dmitriysamoilov on 22.12.17.
- */
-
 @RequiresApi(api = Build.VERSION_CODES.HONEYCOMB)
 public class AddDeviceFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.add_device_fragment, container, false);
-
         return view;
     }
 }
