@@ -16,6 +16,9 @@ import android.os.SystemClock;
 import android.util.Log;
 
 import com.appsx.childrensactivitycontrol.database.BaseDataMaster;
+import com.appsx.childrensactivitycontrol.database.SPHelper;
+import com.appsx.childrensactivitycontrol.util.GlobalNames;
+import com.appsx.childrensactivitycontrol.util.NotificationWorker;
 import com.appsx.childrensactivitycontrol.util.screen.ScreenBroadCastReceiver;
 
 import java.util.List;
@@ -64,11 +67,11 @@ public class WatchingService extends Service {
         if (dataMaster == null) {
             dataMaster = BaseDataMaster.getDataMaster(WatchingService.this);
         }
-        dataMaster.insertScreenState(String.valueOf(System.currentTimeMillis()));
 
-        return super.
+        NotificationWorker notificationWorker = new NotificationWorker(this);
+        notificationWorker.showNotification();
 
-                onStartCommand(intent, flags, startId);
+        return super.onStartCommand(intent, flags, startId);
     }
 
     @Override
@@ -78,9 +81,16 @@ public class WatchingService extends Service {
         if (dataMaster == null) {
             dataMaster = BaseDataMaster.getDataMaster(WatchingService.this);
         }
-        updateEventDB();
-        dataMaster.insertScreenState(String.valueOf(System.currentTimeMillis()));
+        dataMaster.insertEvent(GlobalNames.END_LAST_APP, String.valueOf(System.currentTimeMillis()));
         unregisterReceiver(screenStateReceiver);
+
+        NotificationWorker notificationWorker = new NotificationWorker(this);
+        if (SPHelper.isServiceRunning(this)) {
+            notificationWorker.changeNotificationMessage(false);
+        } else {
+            notificationWorker.stopShowNotification();
+        }
+
         mHandler = null;
         timer.cancel();
         Log.d(LOG_TAG, "onDestroy");
@@ -140,6 +150,8 @@ public class WatchingService extends Service {
                 SystemClock.elapsedRealtime() + 500,
                 restartServicePendingIntent);
         updateEventDB();
+        NotificationWorker notificationWorker = new NotificationWorker(this);
+        notificationWorker.changeNotificationMessage(false);
         super.onTaskRemoved(rootIntent);
 
     }

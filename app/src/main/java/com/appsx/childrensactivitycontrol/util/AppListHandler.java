@@ -81,6 +81,7 @@ public class AppListHandler {
     public AppInfoListModel getAppInfoByPackage(ArrayList<AppListModel> inputList, String appName) {
         final int KEY_DATE_ARRAY = 0;
         final int KEY_TIME_ARRAY = 1;
+        final int KEY_TIME_PREF_ARRAY = 2;
         boolean needFilter = false;
         try {
             if (timePeriodData.length == 2) {
@@ -120,9 +121,14 @@ public class AppListHandler {
 
                             if (appInfo.getDate().equals(startDateFormat[KEY_DATE_ARRAY])) {
                                 foundDate = true;
+                                String timePref = "";
+                                if (startDateFormat.length == 3 && endDateFormat.length == 3) {
+                                    timePref = " " + startDateFormat[KEY_TIME_PREF_ARRAY];
+                                }
                                 ArrayList<String> runningEvents = appInfo.getRunningEvents();
                                 String newEvent = startDateFormat[KEY_TIME_ARRAY] + " - " +
-                                        endDateFormat[KEY_TIME_ARRAY];
+                                        endDateFormat[KEY_TIME_ARRAY] + timePref;
+
                                 runningEvents.add(newEvent);
                                 outPutModel.getAppInfos().set(i, appInfo);
                             }
@@ -133,8 +139,12 @@ public class AppListHandler {
                         String date = startDateFormat[KEY_DATE_ARRAY];
 
                         ArrayList<String> runningEvents = new ArrayList<>();
+                        String timePref = "";
+                        if (startDateFormat.length == 3 && endDateFormat.length == 3) {
+                            timePref = " " + startDateFormat[KEY_TIME_PREF_ARRAY];
+                        }
                         String newEvent = startDateFormat[KEY_TIME_ARRAY] + " - " +
-                                endDateFormat[KEY_TIME_ARRAY];
+                                endDateFormat[KEY_TIME_ARRAY] + timePref;
                         runningEvents.add(newEvent);
                         AppInfoListModel.AppInfo newAppInfo = new AppInfoListModel.AppInfo(date, runningEvents);
                         ArrayList<AppInfoListModel.AppInfo> list = new ArrayList<>();
@@ -145,8 +155,12 @@ public class AppListHandler {
                         String date = startDateFormat[KEY_DATE_ARRAY];
 
                         ArrayList<String> runningEvents = new ArrayList<>();
+                        String timePref = "";
+                        if (startDateFormat.length == 3 && endDateFormat.length == 3) {
+                            timePref = " " + startDateFormat[KEY_TIME_PREF_ARRAY];
+                        }
                         String newEvent = startDateFormat[KEY_TIME_ARRAY] + " - " +
-                                endDateFormat[KEY_TIME_ARRAY];
+                                endDateFormat[KEY_TIME_ARRAY] + timePref;
                         runningEvents.add(newEvent);
                         AppInfoListModel.AppInfo newAppInfo = new AppInfoListModel.AppInfo(date, runningEvents);
                         outPutModel.getAppInfos().add(newAppInfo);
@@ -200,14 +214,19 @@ public class AppListHandler {
                 AppListModel verifiableModel = duplicateInputList.get(i);
 
                 if (outPutList.size() == 0) {
-                    AppListModel model = verifiableModel;
-                    String dateStart = model.getDataStart();
-                    String dateEnd = model.getDataEnd();
-                    long _dateStart = Long.parseLong(dateStart);
-                    long _dataEnd = Long.parseLong(dateEnd);
-                    long time = _dataEnd - _dateStart;
-                    model.setTime(String.valueOf(time));
-                    outPutList.add(model);
+                    try {
+                        AppListModel model = verifiableModel;
+                        String dateStart = model.getDataStart();
+                        String dateEnd = model.getDataEnd();
+                        long _dateStart = Long.parseLong(dateStart);
+                        long _dataEnd = Long.parseLong(dateEnd);
+                        long time = _dataEnd - _dateStart;
+                        model.setTime(String.valueOf(time));
+                        outPutList.add(model);
+                    } catch (NumberFormatException e) {
+                        e.printStackTrace();
+                    }
+
                 } else {
                     // ищем нужное приложение в списке.
                     if (verifiableModel.getAppPackage().equals(searchAppPackage)) {

@@ -5,5 +5,8 @@ public interface GlobalNames {
     int END_PERIOD_ID = 1;
     String MODE_ALL_TIME = "all_time";
     String END_LAST_APP = "end_last_app";
-    String UPDATE_TASKS_WHEN_SCREEN_ON = "update_last_task";
+    String ALERT_PERMISSION_HISTORY = "history";
+    String ALERT_PERMISSION_AUTOSTART = "autostart";
+
+
 }

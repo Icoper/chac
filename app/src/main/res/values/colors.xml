@@ -4,4 +4,5 @@
     <color name="colorBorderGrey">#cfcfcf</color>
     <color name="colorBlue">#2dbbf7</color>
     <color name="colorWhite">#f1f1f1</color>
+    <color name="colorRed">#ff1b1b</color>
 </resources>

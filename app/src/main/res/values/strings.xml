@@ -3,15 +3,33 @@
 
     <string name="app_name">Child activity control</string>
 
+    // PasswordActivity
+    <string name="edit_text_empty">You need to enter PIN first</string>
+    <string name="passwords_do_not_match">Passwords do not match</string>
+    <string name="prompt_password">Password</string>
+    <string name="wrong_pin">PIN is wrong</string>
+    <string name="prompt_password_confirm">Password (confirm)</string>
+    <string name="think_pin_part_one">Think of a pin code to protect applications from entering outsiders. In the future, it will be used to enter the application. </string>
+    <string name="think_pin_part_two">Remember the password, because it will not be possible to restore it!</string>
+    <string name="action_sign_in">Sign in</string>
+
+
+    // Notification
+    <string name="notify_service_work">service is work</string>
+    <string name="notify_service_not_work">service is\'t work</string>
+    <string name="alert_perm_impMsg">Important message!</string>
+    <string name="alert_perm_history">For work, the application needs access to the usage history. Without your permission, the application will not be able to work.</string>
+    <string name="alert_perm_autostart_miui">Your phone is running under the control of the MIUI shell, so you must manually grant permission to autorun this application. Without your permission, the application will not be able to work correctly.</string>
+
     //Statistic Fragment
     <string name="start_chac">Start service</string>
     <string name="statistic_title">Statistic</string>
     <string name="select_device">Select device</string>
     <string name="select_time_period">Select statistic period</string>
-        <string name="time_period_start">From :</string>
-        <string name="time_period_end">To :</string>
-        <string name="time_period_all">All time</string>
-        <string name="time_period_custom">Custom</string>
+    <string name="time_period_start">From :</string>
+    <string name="time_period_end">To :</string>
+    <string name="time_period_all">All time</string>
+    <string name="time_period_custom">Custom</string>
     <string name="list_app_text">Used apps statistic</string>
     <string name="time_period_wrong">Time period is wrong</string>
     <string name="screen_work_statistic">Screen work statistic</string>
@@ -31,4 +49,7 @@
     <string name="hours_text">h.</string>
     <string name="minutes_text">m.</string>
     <string name="seconds_text">s.</string>
+    <string name="title_activity_password">Sign in</string>
+
+
 </resources>

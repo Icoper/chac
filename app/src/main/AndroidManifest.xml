@@ -5,9 +5,15 @@
 
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
     <uses-permission android:name="android.permission.GET_TASKS" />
-    <uses-permission android:name="android.permission.PACKAGE_USAGE_STATS"
+    <uses-permission
+        android:name="android.permission.PACKAGE_USAGE_STATS"
         tools:ignore="ProtectedPermissions" />
-    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"></uses-permission>
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+
+    <!-- To auto-complete the email text field in the login form with the user's emails -->
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+    <uses-permission android:name="android.permission.READ_PROFILE" />
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
 
     <application
         android:allowBackup="true"
@@ -16,33 +22,34 @@
         android:resizeableActivity="true"
         android:theme="@style/Theme.Design.Light.NoActionBar">
         <activity
-            android:name="com.appsx.childrensactivitycontrol.MainActivity"
+            android:name=".activity.PasswordActivity"
             android:label="@string/app_name"
+            android:noHistory="true"
             android:launchMode="singleTask">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
         </activity>
 
         <receiver android:name=".util.screen.ScreenBroadCastReceiver">
             <intent-filter>
-                <action android:name="android.intent.action.SCREEN_OFF"/>
-                <action android:name="android.intent.action.SCREEN_ON"/>
+                <action android:name="android.intent.action.SCREEN_OFF" />
+                <action android:name="android.intent.action.SCREEN_ON" />
             </intent-filter>
         </receiver>
-
-        <receiver android:name="com.appsx.childrensactivitycontrol.util.app_name.AutoStartWorker">
+        <receiver android:name=".util.app_name.AutoStartWorker">
             <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED"></action>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
 
         <service
-            android:name="com.appsx.childrensactivitycontrol.util.app_name.WatchingService"
+            android:name=".util.app_name.WatchingService"
             android:enabled="true" />
+
+        <activity android:name=".activity.MainActivity"></activity>
     </application>
 
 </manifest>

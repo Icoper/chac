@@ -41,6 +41,7 @@ public class AlertDialogShower {
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setHasFixedSize(true);
         recyclerView.setAdapter(arrayAdapter);
+
         AlertDialog.Builder builder = new AlertDialog
                 .Builder(new ContextThemeWrapper(view.getContext(), R.style.MyAlertDialogTheme));
         builder.setView(view);

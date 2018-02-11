@@ -1,4 +1,4 @@
-package com.appsx.childrensactivitycontrol;
+package com.appsx.childrensactivitycontrol.activity;
 
 import android.app.FragmentTransaction;
 import android.os.Build;
@@ -9,6 +9,7 @@ import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 
+import com.appsx.childrensactivitycontrol.R;
 import com.appsx.childrensactivitycontrol.fragment.AboutAppFragment;
 import com.appsx.childrensactivitycontrol.fragment.AddDeviceFragment;
 import com.appsx.childrensactivitycontrol.fragment.StatisticFragment;

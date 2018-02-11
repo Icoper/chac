@@ -1,6 +1,5 @@
 package com.appsx.childrensactivitycontrol.fragment;
 
-
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.AppOpsManager;
@@ -8,7 +7,9 @@ import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.app.Fragment;
+import android.content.ComponentName;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
@@ -18,8 +19,10 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -67,13 +70,16 @@ public class StatisticFragment extends Fragment implements CompoundButton.OnChec
     private LinearLayoutManager layoutManager;
     private Switch startListening;
     private RecyclerView listRecyclerView;
+
+    private LinearLayout linearLayoutPeriod;
     private TextView periodStatisticTv;
     private static TextView timePeriodFromTv;
     private static TextView timePeriodToTv;
-    private LinearLayout linearLayoutPeriod;
+
     private LinearLayout linearLayoutPeriodFrom;
     private LinearLayout linearLayoutPeriodTo;
     private Button updateTimeFilterBtn;
+
     private ProgressBar loadAppsProgress;
     private ImageView moreDetTimePerIv;
     // use dataKey = "start" or dataKey = "end"
@@ -120,8 +126,7 @@ public class StatisticFragment extends Fragment implements CompoundButton.OnChec
 
         periodStatisticTv = (TextView) getView().findViewById(R.id.sf_time_period_text);
         setupPeriodTextView("", "");
-        moreDetTimePerIv = (ImageView) getView().findViewById(R.id.sf_time_period_more);
-        moreDetTimePerIv.setOnClickListener(this);
+
         linearLayoutPeriod = (LinearLayout) getView().findViewById(R.id.sf_time_period);
 
         loadAppsProgress = (ProgressBar) getView().findViewById(R.id.sf_loadapss_progress);
@@ -144,7 +149,28 @@ public class StatisticFragment extends Fragment implements CompoundButton.OnChec
 
     @Override
     public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
-        if (isAccessGranted()) {
+        String manufacturer = "xiaomi";
+
+        if (Build.VERSION.SDK_INT > 19) {
+            if (!isAccessGranted()) {
+                showMessageAlert(GlobalNames.ALERT_PERMISSION_HISTORY);
+                compoundButton.setChecked(false);
+            } else if (!SPHelper.isAutoStartPermGranted(context) && manufacturer.equalsIgnoreCase(android.os.Build.MANUFACTURER)) {
+                compoundButton.setChecked(false);
+                showMessageAlert(GlobalNames.ALERT_PERMISSION_AUTOSTART);
+            } else {
+                if (compoundButton == startListening) {
+                    if (!isChecked) {
+                        context.stopService(serviceIntent);
+                        SPHelper.setIsServiceRunning(context, false);
+                        new ToastShower().showToast(context, "STOP");
+                    } else {
+                        SPHelper.setIsServiceRunning(context, true);
+                        context.startService(serviceIntent);
+                    }
+                }
+            }
+        } else {
             if (compoundButton == startListening) {
                 if (!isChecked) {
                     context.stopService(serviceIntent);
@@ -155,12 +181,64 @@ public class StatisticFragment extends Fragment implements CompoundButton.OnChec
                     context.startService(serviceIntent);
                 }
             }
-        } else {
-            compoundButton.setChecked(false);
-            Intent intent = new Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS);
-            startActivity(intent);
         }
 
+    }
+
+    private void showMessageAlert(String mode) {
+
+        View view = LayoutInflater.from(fragmentView.getContext()).inflate(R.layout.alert_permission_asker, null);
+        AlertDialog.Builder builder = new AlertDialog
+                .Builder(new ContextThemeWrapper(fragmentView.getContext(), R.style.MyAlertDialogTheme));
+        builder.setView(view);
+        TextView textView = (TextView) view.findViewById(R.id.alert_perm_message_tv);
+
+        if (mode.equals(GlobalNames.ALERT_PERMISSION_AUTOSTART)) {
+
+            textView.setText(fragmentView.getContext().getString(R.string.alert_perm_autostart_miui));
+            builder.setCancelable(false)
+                    .setPositiveButton(fragmentView.getContext().getString(R.string.confirm_text), new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            SPHelper.setisAutoStartPermGranted(context, true);
+                            Intent intent = new Intent();
+                            intent.setComponent(new ComponentName("com.miui.securitycenter",
+                                    "com.miui.permcenter.autostart.AutoStartManagementActivity"));
+                            startActivity(intent);
+
+                        }
+                    })
+                    .setNegativeButton(fragmentView.getContext().getString(R.string.cancel_text), new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            SPHelper.setisAutoStartPermGranted(fragmentView.getContext(), false);
+                            dialog.cancel();
+                        }
+                    });
+
+
+        } else if (mode.equals(GlobalNames.ALERT_PERMISSION_HISTORY)) {
+            textView.setText(context.getString(R.string.alert_perm_history));
+            builder.setCancelable(false)
+                    .setPositiveButton(context.getString(R.string.confirm_text), new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            Intent intent = new Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS);
+                            startActivity(intent);
+
+                        }
+                    })
+                    .setNegativeButton(context.getString(R.string.cancel_text), new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.cancel();
+                        }
+                    });
+
+        }
+
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
     }
 
     private boolean isAccessGranted() {
@@ -184,9 +262,6 @@ public class StatisticFragment extends Fragment implements CompoundButton.OnChec
     public void onClick(View view) {
         int id = view.getId();
         switch (id) {
-            case R.id.sf_time_period_more:
-                showTimePeriodSelector();
-                break;
             case R.id.ad_time_p_from:
                 openCalendar(id);
                 break;
@@ -214,9 +289,9 @@ public class StatisticFragment extends Fragment implements CompoundButton.OnChec
                     filterDateStart = start.getTime();
                     Date end = dateFormat.parse(endData);
                     filterDataEnd = end.getTime();
-                    if (filterDateStart > filterDataEnd){
-                        Toast.makeText(context,context.getString(R.string.time_period_wrong),Toast.LENGTH_SHORT).show();
-                    }else {
+                    if (filterDateStart > filterDataEnd) {
+                        Toast.makeText(context, context.getString(R.string.time_period_wrong), Toast.LENGTH_SHORT).show();
+                    } else {
                         periodStatisticTv.setText(getString(R.string.time_period_custom));
                         loadAppsProgress.setVisibility(View.VISIBLE);
                         LoadAppsToListView longTask = new LoadAppsToListView();
@@ -254,11 +329,12 @@ public class StatisticFragment extends Fragment implements CompoundButton.OnChec
 
     private void showTimePeriodSelector() {
         ViewGroup.LayoutParams layoutParams = linearLayoutPeriod.getLayoutParams();
-        if (layoutParams.height != WindowManager.LayoutParams.WRAP_CONTENT) {
-            layoutParams.height = WindowManager.LayoutParams.WRAP_CONTENT;
-        } else layoutParams.height = 85;
+//        if (layoutParams.height != WindowManager.LayoutParams.WRAP_CONTENT) {
+//            layoutParams.height = WindowManager.LayoutParams.WRAP_CONTENT;
+//        } else layoutParams.height = 85;
+//
+//        linearLayoutPeriod.setLayoutParams(layoutParams);
 
-        linearLayoutPeriod.setLayoutParams(layoutParams);
     }
 
     class LoadAppsToListView extends AsyncTask<Void, Void, ArrayList<AppListModel>> {
@@ -272,11 +348,11 @@ public class StatisticFragment extends Fragment implements CompoundButton.OnChec
         }
 
         private ArrayList<AppListModel> reformatAppList(ArrayList<AppListModel> appListTemp) {
-            AppListHandler appListHandler = new AppListHandler(GlobalNames.MODE_ALL_TIME, null,context);
+            AppListHandler appListHandler = new AppListHandler(GlobalNames.MODE_ALL_TIME, null, context);
 
             try {
                 if (timePeriodStore.length != 0) {
-                    appListHandler = new AppListHandler("", timePeriodStore,context);
+                    appListHandler = new AppListHandler("", timePeriodStore, context);
                 }
             } catch (NullPointerException e) {
                 e.printStackTrace();
