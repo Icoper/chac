@@ -123,11 +123,11 @@ public class AppListHandler {
                                 foundDate = true;
                                 String timePref = "";
                                 if (startDateFormat.length == 3 && endDateFormat.length == 3) {
-                                    timePref = " " + startDateFormat[KEY_TIME_PREF_ARRAY];
+                                    timePref = startDateFormat[KEY_TIME_PREF_ARRAY] + " : ";
                                 }
                                 ArrayList<String> runningEvents = appInfo.getRunningEvents();
-                                String newEvent = startDateFormat[KEY_TIME_ARRAY] + " - " +
-                                        endDateFormat[KEY_TIME_ARRAY] + timePref;
+                                String newEvent = timePref + startDateFormat[KEY_TIME_ARRAY] + " - " +
+                                        endDateFormat[KEY_TIME_ARRAY];
 
                                 runningEvents.add(newEvent);
                                 outPutModel.getAppInfos().set(i, appInfo);
@@ -141,10 +141,10 @@ public class AppListHandler {
                         ArrayList<String> runningEvents = new ArrayList<>();
                         String timePref = "";
                         if (startDateFormat.length == 3 && endDateFormat.length == 3) {
-                            timePref = " " + startDateFormat[KEY_TIME_PREF_ARRAY];
+                            timePref = startDateFormat[KEY_TIME_PREF_ARRAY] + " : ";
                         }
-                        String newEvent = startDateFormat[KEY_TIME_ARRAY] + " - " +
-                                endDateFormat[KEY_TIME_ARRAY] + timePref;
+                        String newEvent = timePref + startDateFormat[KEY_TIME_ARRAY] + " - " +
+                                endDateFormat[KEY_TIME_ARRAY];
                         runningEvents.add(newEvent);
                         AppInfoListModel.AppInfo newAppInfo = new AppInfoListModel.AppInfo(date, runningEvents);
                         ArrayList<AppInfoListModel.AppInfo> list = new ArrayList<>();
@@ -157,10 +157,10 @@ public class AppListHandler {
                         ArrayList<String> runningEvents = new ArrayList<>();
                         String timePref = "";
                         if (startDateFormat.length == 3 && endDateFormat.length == 3) {
-                            timePref = " " + startDateFormat[KEY_TIME_PREF_ARRAY];
+                            timePref = startDateFormat[KEY_TIME_PREF_ARRAY] + " : ";
                         }
-                        String newEvent = startDateFormat[KEY_TIME_ARRAY] + " - " +
-                                endDateFormat[KEY_TIME_ARRAY] + timePref;
+                        String newEvent = timePref + startDateFormat[KEY_TIME_ARRAY] + " - " +
+                                endDateFormat[KEY_TIME_ARRAY];
                         runningEvents.add(newEvent);
                         AppInfoListModel.AppInfo newAppInfo = new AppInfoListModel.AppInfo(date, runningEvents);
                         outPutModel.getAppInfos().add(newAppInfo);

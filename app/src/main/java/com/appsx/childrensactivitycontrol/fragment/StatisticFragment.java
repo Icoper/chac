@@ -7,6 +7,7 @@ import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.app.Fragment;
+import android.content.ActivityNotFoundException;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -22,11 +23,11 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
@@ -46,6 +47,10 @@ import com.appsx.childrensactivitycontrol.util.AppListHandler;
 import com.appsx.childrensactivitycontrol.util.GlobalNames;
 import com.appsx.childrensactivitycontrol.util.app_name.ToastShower;
 import com.appsx.childrensactivitycontrol.util.app_name.WatchingService;
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.InterstitialAd;
+import com.google.android.gms.ads.MobileAds;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -56,6 +61,10 @@ import java.util.Date;
 
 @TargetApi(Build.VERSION_CODES.HONEYCOMB)
 public class StatisticFragment extends Fragment implements CompoundButton.OnCheckedChangeListener, View.OnClickListener {
+
+    private static final String LOG_TAG = "StatisticFragment";
+    //AdMod
+    private InterstitialAd mInterstitialAd;
 
     private static String[] timePeriodStore;
 
@@ -72,6 +81,7 @@ public class StatisticFragment extends Fragment implements CompoundButton.OnChec
     private RecyclerView listRecyclerView;
 
     private LinearLayout linearLayoutPeriod;
+    private LinearLayout linearLayoutCustomPeriod;
     private TextView periodStatisticTv;
     private static TextView timePeriodFromTv;
     private static TextView timePeriodToTv;
@@ -97,11 +107,38 @@ public class StatisticFragment extends Fragment implements CompoundButton.OnChec
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
         initialize();
+
+        buildTestAds();
         serviceIntent = new Intent(context, WatchingService.class);
 
     }
 
+    private void buildTestAds() {
+        MobileAds.initialize(fragmentView.getContext(), getString(R.string.ad_mob_id));
+        mInterstitialAd = new InterstitialAd(fragmentView.getContext());
+        mInterstitialAd.setAdUnitId(getString(R.string.test_ad_mob_activity_block_id));
+        AdRequest request = new AdRequest.Builder()
+                .addTestDevice("57822694BFE93E206D761234EE33B7C2")  // An example device ID
+                .build();
+        mInterstitialAd.loadAd(request);
+        mInterstitialAd.setAdListener(new AdListener() {
+            @Override
+            public void onAdLoaded() {
+                // Code to be executed when an ad finishes loading.
+                mInterstitialAd.show();
+            }
+
+            @Override
+            public void onAdFailedToLoad(int errorCode) {
+                // Code to be executed when an ad request fails.
+                Log.d(LOG_TAG, "error code AD : " + errorCode);
+            }
+
+        });
+
+    }
 
     // init all view elements
     private void initialize() {
@@ -119,6 +156,11 @@ public class StatisticFragment extends Fragment implements CompoundButton.OnChec
         linearLayoutPeriodTo = (LinearLayout) getView().findViewById(R.id.ad_time_p_to);
         linearLayoutPeriodFrom.setOnClickListener(this);
         linearLayoutPeriodTo.setOnClickListener(this);
+        linearLayoutCustomPeriod = (LinearLayout) getView().findViewById(R.id.sf_time_custom_layout);
+        linearLayoutCustomPeriod.setVisibility(View.GONE);
+        moreDetTimePerIv = (ImageView) getView().findViewById(R.id.sf_select_time_period_more);
+        moreDetTimePerIv.setOnClickListener(this);
+
         timePeriodFromTv = (TextView) getView().findViewById(R.id.ad_time_p_from_tv);
         timePeriodToTv = (TextView) getView().findViewById(R.id.ad_time_p_to_tv);
         updateTimeFilterBtn = (Button) getView().findViewById(R.id.ad_time_update_btn);
@@ -128,7 +170,7 @@ public class StatisticFragment extends Fragment implements CompoundButton.OnChec
         setupPeriodTextView("", "");
 
         linearLayoutPeriod = (LinearLayout) getView().findViewById(R.id.sf_time_period);
-
+        linearLayoutPeriod.setOnClickListener(this);
         loadAppsProgress = (ProgressBar) getView().findViewById(R.id.sf_loadapss_progress);
         LoadAppsToListView longTask = new LoadAppsToListView();
         longTask.execute();
@@ -204,7 +246,11 @@ public class StatisticFragment extends Fragment implements CompoundButton.OnChec
                             Intent intent = new Intent();
                             intent.setComponent(new ComponentName("com.miui.securitycenter",
                                     "com.miui.permcenter.autostart.AutoStartManagementActivity"));
-                            startActivity(intent);
+                            try {
+                                startActivity(intent);
+                            } catch (ActivityNotFoundException e) {
+
+                            }
 
                         }
                     })
@@ -271,6 +317,20 @@ public class StatisticFragment extends Fragment implements CompoundButton.OnChec
             case R.id.ad_time_update_btn:
                 updateTimeFilter();
                 break;
+            case R.id.sf_time_period:
+                changeTimePeriodSelectorLayout();
+                break;
+            case R.id.sf_select_time_period_more:
+                changeTimePeriodSelectorLayout();
+                break;
+        }
+    }
+
+    private void changeTimePeriodSelectorLayout() {
+        if (linearLayoutCustomPeriod.getVisibility() == View.VISIBLE) {
+            linearLayoutCustomPeriod.setVisibility(View.GONE);
+        } else {
+            linearLayoutCustomPeriod.setVisibility(View.VISIBLE);
         }
     }
 
@@ -325,16 +385,6 @@ public class StatisticFragment extends Fragment implements CompoundButton.OnChec
             dataKey = "end";
         }
         dialogFragment.show(getFragmentManager(), "dataPicker");
-    }
-
-    private void showTimePeriodSelector() {
-        ViewGroup.LayoutParams layoutParams = linearLayoutPeriod.getLayoutParams();
-//        if (layoutParams.height != WindowManager.LayoutParams.WRAP_CONTENT) {
-//            layoutParams.height = WindowManager.LayoutParams.WRAP_CONTENT;
-//        } else layoutParams.height = 85;
-//
-//        linearLayoutPeriod.setLayoutParams(layoutParams);
-
     }
 
     class LoadAppsToListView extends AsyncTask<Void, Void, ArrayList<AppListModel>> {

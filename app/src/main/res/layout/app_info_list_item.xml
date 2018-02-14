@@ -3,36 +3,48 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal"
+    android:orientation="vertical"
     android:padding="8dp">
 
-    <TextView
-        android:padding="8dp"
-        android:elevation="8dp"
-        android:backgroundTint="@color/colorBlue"
-        android:id="@+id/ai_date_tv"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@drawable/item_container"
-        tools:text='27.01.2018' />
-
-    <TextView
-        android:layout_width="8dp"
-        android:layout_height="wrap_content" />
-
-    <TextView
-        android:elevation="2dp"
-        android:background="@drawable/item_container"
-        android:padding="8dp"
-        android:layout_margin="8dp"
-        android:id="@+id/ai_list_date_tv"
-        android:text="@string/app_info_empty"
-        tools:text="8:21:21-8:25:12,
-8:21:21-8:25:12,
-8:21:21-8:25:12,
-8:21:21-8:25:12,
-8:21:21-8:25:12,
-8:21:21-8:25:12"
+    <LinearLayout
+        android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/ai_date_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/item_container"
+            android:backgroundTint="@color/colorBlue"
+            android:elevation="4dp"
+            android:padding="8dp"
+            android:layout_margin="8dp"
+            tools:text='27.01.2018' />
+
+        <TextView
+            android:layout_gravity="top"
+            android:layout_margin="8dp"
+            android:id="@+id/ai_list_date_tv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/item_container"
+            android:elevation="4dp"
+            android:padding="8dp"
+            android:text="@string/app_info_empty"
+            tools:text="8:21:21-8:25:12,
+8:21:21-8:25:12,
+8:21:21-8:25:12,
+8:21:21-8:25:12,
+8:21:21-8:25:12,
+8:21:21-8:25:12" />
+
+    </LinearLayout>
+
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:layout_marginTop="8dp"
+        android:background="@color/colorBorderGrey" />
 </LinearLayout>

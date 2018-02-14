@@ -7,6 +7,5 @@ public interface GlobalNames {
     String END_LAST_APP = "end_last_app";
     String ALERT_PERMISSION_HISTORY = "history";
     String ALERT_PERMISSION_AUTOSTART = "autostart";
-
-
+    String APP_PACKAGE_NAME = "com.appsx.childrensactivitycontrol";
 }

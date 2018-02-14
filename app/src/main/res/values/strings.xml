@@ -2,6 +2,9 @@
 <resources>
 
     <string name="app_name">Child activity control</string>
+    <string name="app_tagline">Protect Your Child!</string>
+    // 1 - общая версия. 2 - версия дизайна. 3 - функционально
+    <string name="app_version">0.3.14b</string>
 
     // PasswordActivity
     <string name="edit_text_empty">You need to enter PIN first</string>
@@ -34,6 +37,10 @@
     <string name="time_period_wrong">Time period is wrong</string>
     <string name="screen_work_statistic">Screen work statistic</string>
     <string name="app_info_empty">Not launch in that day</string>
+    // NavigationDrawer
+    <string name="nav_rate">Rate this app</string>
+    <string name="nav_reset">Reset Results</string>
+
     //AboutAppFragment
     <string name="about_title">About</string>
 
@@ -50,6 +57,13 @@
     <string name="minutes_text">m.</string>
     <string name="seconds_text">s.</string>
     <string name="title_activity_password">Sign in</string>
+    <string name="ad_mob_id">ca-app-pub-7209919469454946~9409925084</string>
+    <string name="ad_mob_activity_block_id">ca-app-pub-7209919469454946/9767225727</string>
+    <string name="test_ad_mob_activity_block_id">ca-app-pub-3940256099942544/1033173712</string>
+    <string name="action_settings">Settings</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="reset_all_data_msg">Are you sure you want to delete all the data of the work of your applications?</string>
 
 
 </resources>

@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout android:orientation="vertical"
+    android:rotation="180"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/content_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -9,13 +10,29 @@
     android:paddingLeft="0dp"
     android:paddingRight="0dp"
     android:paddingTop="0dp"
+    android:background="@color/colorBorderGrey"
     app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-    <FrameLayout
-        android:elevation="16dp"
+
+    <android.support.design.widget.BottomNavigationView
+        android:rotation="180"
+        android:id="@+id/navigation"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/ma_container">
+        android:layout_height="wrap_content"
+        android:layout_gravity="end"
+        android:background="@color/colorBlue"
+        android:layout_weight="0"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:menu="@menu/navigation" />
+    <FrameLayout
+        android:rotation="180"
+        android:layout_weight="1"
+        android:id="@+id/fragment_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
     </FrameLayout>
 
-</RelativeLayout>
+</LinearLayout>

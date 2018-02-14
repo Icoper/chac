@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Child activity control</string>
+    <string name="app_tagline">Защитите своего ребенка!</string>
+    // PasswordActivity
+    <string name="edit_text_empty">Сначала необходимо ввести PIN-код</string>
+    <string name="passwords_do_not_match">Пароли не совпадают</string>
+    <string name="prompt_password">Пароль</string>
+    <string name="wrong_pin">PIN неверный</string>
+    <string name="prompt_password_confirm">Пароль (повторите)</string>
+    <string name="think_pin_part_one">Придумайте PIN-код для защиты приложения от посторонних. В будущем он будет использоваться для входа в приложение.</string>
+    <string name="think_pin_part_two">Запомните пароль, потому что восстановить его будет невозможно!</string>
+    <string name="action_sign_in">Sign in</string>
+
+
+    // Notification
+    <string name="notify_service_work">Служба работает</string>
+    <string name="notify_service_not_work">Служба не работает</string>
+    <string name="alert_perm_impMsg">Внимание!</string>
+    <string name="alert_perm_history">Для работы приложение нуждается в доступе к истории использования. Без вашего разрешения приложение не сможет работать.</string>
+    <string name="alert_perm_autostart_miui">Похоже ваш телефон работает под управлением оболочки MIUI, поэтому вы должны вручную предоставить разрешение на автозапуск этого приложения. Без вашего разрешения приложение не сможет работать правильно.</string>
+
+    //Statistic Fragment
+    <string name="start_chac">Включить службу</string>
+    <string name="statistic_title">Статистика</string>
+    <string name="select_device">Select device</string>
+    <string name="select_time_period">Период отображаемой статистики</string>
+    <string name="time_period_start">С :</string>
+    <string name="time_period_end">По :</string>
+    <string name="time_period_all">За все время</string>
+    <string name="time_period_custom">Пользовательсий</string>
+    <string name="list_app_text">Статистика запущенных приложений</string>
+    <string name="time_period_wrong">Выбран невырный период</string>
+    <string name="app_info_empty">Не запусклось</string>
+    // NavigationDrawer
+    <string name="nav_rate">Оценить приложение</string>
+    <string name="nav_reset">Сбросить данные</string>
+
+    //AboutAppFragment
+    <string name="about_title">О приложении</string>
+
+    // AddDeviceFragment
+    <string name="addDevice_title">Устройства</string>
+    <string name="action_ok">Oк</string>
+    <string name="action_cancel">Отмена</string>
+
+    //Other
+    <string name="update_text">Обновить</string>
+    <string name="confirm_text">Подтвердить</string>
+    <string name="cancel_text">Отмена</string>
+    <string name="hours_text">ч.</string>
+    <string name="minutes_text">м.</string>
+    <string name="seconds_text">с.</string>
+    <string name="ad_mob_id">ca-app-pub-7209919469454946~9409925084</string>
+    <string name="ad_mob_activity_block_id">ca-app-pub-7209919469454946/9767225727</string>
+    <string name="test_ad_mob_activity_block_id">ca-app-pub-3940256099942544/1033173712</string>
+    <string name="action_settings">Настройки</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="reset_all_data_msg">Вы действительно хотите удалить все данные о работе своих приложений?</string>
+
+
+</resources>
