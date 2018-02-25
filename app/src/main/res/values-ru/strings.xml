@@ -3,6 +3,8 @@
 
     <string name="app_name">Child activity control</string>
     <string name="app_tagline">Защитите своего ребенка!</string>
+    // 1 - общая версия. 2 - версия дизайна. 3 - функционально
+    <string name="app_version">0.3.14b</string>
     // PasswordActivity
     <string name="edit_text_empty">Сначала необходимо ввести PIN-код</string>
     <string name="passwords_do_not_match">Пароли не совпадают</string>

@@ -106,12 +106,11 @@ public class AppListHandler {
                     startDate.setTime(Long.parseLong(listModel.getDataStart()));
                     Date endDate = new Date();
                     endDate.setTime(Long.parseLong(listModel.getDataEnd()));
-                    String startDateNFormat = DateFormat
-                            .getDateTimeInstance(DateFormat.SHORT, DateFormat.MEDIUM)
-                            .format(startDate);
-                    String endDateNFormat = DateFormat
-                            .getDateTimeInstance(DateFormat.SHORT, DateFormat.MEDIUM)
-                            .format(endDate);
+                    SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy kk:mm:ss a");
+
+                    String startDateNFormat = sdf.format(startDate);
+                    String endDateNFormat = sdf.format(endDate);
+
                     String[] startDateFormat = startDateNFormat.split(" ");
                     String[] endDateFormat = endDateNFormat.split(" ");
                     boolean foundDate = false;
@@ -122,9 +121,6 @@ public class AppListHandler {
                             if (appInfo.getDate().equals(startDateFormat[KEY_DATE_ARRAY])) {
                                 foundDate = true;
                                 String timePref = "";
-                                if (startDateFormat.length == 3 && endDateFormat.length == 3) {
-                                    timePref = startDateFormat[KEY_TIME_PREF_ARRAY] + " : ";
-                                }
                                 ArrayList<String> runningEvents = appInfo.getRunningEvents();
                                 String newEvent = timePref + startDateFormat[KEY_TIME_ARRAY] + " - " +
                                         endDateFormat[KEY_TIME_ARRAY];
@@ -140,9 +136,7 @@ public class AppListHandler {
 
                         ArrayList<String> runningEvents = new ArrayList<>();
                         String timePref = "";
-                        if (startDateFormat.length == 3 && endDateFormat.length == 3) {
-                            timePref = startDateFormat[KEY_TIME_PREF_ARRAY] + " : ";
-                        }
+
                         String newEvent = timePref + startDateFormat[KEY_TIME_ARRAY] + " - " +
                                 endDateFormat[KEY_TIME_ARRAY];
                         runningEvents.add(newEvent);
@@ -156,9 +150,6 @@ public class AppListHandler {
 
                         ArrayList<String> runningEvents = new ArrayList<>();
                         String timePref = "";
-                        if (startDateFormat.length == 3 && endDateFormat.length == 3) {
-                            timePref = startDateFormat[KEY_TIME_PREF_ARRAY] + " : ";
-                        }
                         String newEvent = timePref + startDateFormat[KEY_TIME_ARRAY] + " - " +
                                 endDateFormat[KEY_TIME_ARRAY];
                         runningEvents.add(newEvent);

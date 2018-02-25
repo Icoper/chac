@@ -110,7 +110,7 @@ public class StatisticFragment extends Fragment implements CompoundButton.OnChec
 
         initialize();
 
-        buildTestAds();
+//        buildTestAds();
         serviceIntent = new Intent(context, WatchingService.class);
 
     }
@@ -118,7 +118,7 @@ public class StatisticFragment extends Fragment implements CompoundButton.OnChec
     private void buildTestAds() {
         MobileAds.initialize(fragmentView.getContext(), getString(R.string.ad_mob_id));
         mInterstitialAd = new InterstitialAd(fragmentView.getContext());
-        mInterstitialAd.setAdUnitId(getString(R.string.test_ad_mob_activity_block_id));
+        mInterstitialAd.setAdUnitId(getString(R.string.ad_mob_activity_block_id));
         AdRequest request = new AdRequest.Builder()
                 .addTestDevice("57822694BFE93E206D761234EE33B7C2")  // An example device ID
                 .build();
